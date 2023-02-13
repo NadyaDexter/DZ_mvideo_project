@@ -13,6 +13,11 @@ class Base():
         get_url = self.driver_g.current_url
         print("Current URL " + get_url)
 
+    """Method scroll page"""
+
+    def navigate_to(self, x, y):
+        self.driver_g.execute_script("window.scrollTo(" + str(x) + ", " + str(y)+")")
+
     """Method save variable as text"""
 
     def var_as_text(self, vari):
@@ -29,17 +34,16 @@ class Base():
     """Method assert text"""
 
     def assert_text(self, var1, var2):
-        value_var1 = var1.text
-        assert value_var1 == var2
-        print("Variable " + value_var1 + " CORRECT")
+        assert var1 == var2
+        print("Value " + var1 + " CORRECT")
 
     """Method assert two variables"""
 
-    def assert_valuables(self, vari1, vari2):
+    def assert_values(self, vari1, vari2):
         value_vari1 = vari1.text
         value_vari2 = vari2.text
         assert value_vari1 == value_vari2
-        print("Variable " + value_vari1 + " CORRECT")
+        print("Value " + value_vari1 + " CORRECT")
 
     """Method Screenshot"""
 

@@ -17,10 +17,13 @@ class Cart_page(Base):
     # Locators
 
     delete_single = "//span[@class='cart-item-actions__title']"
-    cart_game_name = "/html/body/mvid-root/div/ng-component/mvid-layout/div/main/div/div/div[1]/mvid-cart-list/div/ul/li/mvid-cart-item/div/div/div[2]/div[1]/div/div/h3/a"
-    cart_game_price = "/html/body/mvid-root/div/ng-component/mvid-layout/div/main/div/div/div[1]/mvid-cart-list/div/ul/li/mvid-cart-item/div/div/div[2]/div[2]/mvid-cart-item-price/div/mvid-price/div/span"
+    cart_name = "//a[@class='cart-item__name ng-star-inserted']"
+    cart_price = "//span[@class='price__main-value']"
     final_price = "/html/body/mvid-root/div/ng-component/mvid-layout/div/main/div/div/div[2]/div/mvid-cart-total/div/div[1]/div[3]/p[2]"
     empty_cart = "//h1[@class='cart-empty__title']"
+    check_in_button = "//button[@class='cart-total__button-total ng-tns-c301-1 mv-main-button--large mv-main-button--primary mv-button mv-main-button']"
+    skip_button = "//button[@class='login-form__button login-form__button--skip mv-main-button--secondary mv-main-button--medium mv-button mv-main-button ng-star-inserted']"
+    del_all = "//a[@class='cart-list__delete-selected-button mv-link-button--default mv-button mv-link-button ng-star-inserted']"
 
 
     # Getters
@@ -28,11 +31,11 @@ class Cart_page(Base):
     def get_delete_single(self):
         return WebDriverWait(self.driver_g, 30).until(EC.element_to_be_clickable((By.XPATH, self.delete_single)))
 
-    def get_cart_game_name(self):
-        return WebDriverWait(self.driver_g, 30).until(EC.element_to_be_clickable((By.XPATH, self.cart_game_name)))
+    def get_cart_name(self):
+        return WebDriverWait(self.driver_g, 30).until(EC.element_to_be_clickable((By.XPATH, self.cart_name)))
 
-    def get_cart_game_price(self):
-        return WebDriverWait(self.driver_g, 30).until(EC.element_to_be_clickable((By.XPATH, self.cart_game_price)))
+    def get_cart_price(self):
+        return WebDriverWait(self.driver_g, 30).until(EC.element_to_be_clickable((By.XPATH, self.cart_price)))
 
     def get_final_price(self):
         return WebDriverWait(self.driver_g, 30).until(EC.element_to_be_clickable((By.XPATH, self.final_price)))
@@ -40,23 +43,58 @@ class Cart_page(Base):
     def get_empty_cart(self):
         return WebDriverWait(self.driver_g, 30).until(EC.element_to_be_clickable((By.XPATH, self.empty_cart)))
 
+    def get_check_in_button(self):
+        return WebDriverWait(self.driver_g, 30).until(EC.element_to_be_clickable((By.XPATH, self.check_in_button)))
+
+    def get_skip_button(self):
+        return WebDriverWait(self.driver_g, 30).until(EC.element_to_be_clickable((By.XPATH, self.skip_button)))
+
+    def get_del_all(self):
+        return WebDriverWait(self.driver_g, 30).until(EC.element_to_be_clickable((By.XPATH, self.del_all)))
+
 
     # Actions
 
-    def click_get_delete_single(self):
+    def click_delete_single(self):
         self.get_delete_single().click()
         print("Нажали на кнопку Удалить")
 
+    def click_check_in_button(self):
+        self.get_check_in_button().click()
+        print("Нажали на кнопку Перейти к оформлению")
+
+    def click_skip_button(self):
+        self.get_skip_button().click()
+        print("Нажали на кнопку Пропустить (ввод номера телефона)")
+
+    def click_del_all(self):
+        self.get_del_all().click()
+        print("Нажали Удалить выбранные")
+
 
     # Methods
+
     def cart_assert_and_delete(self):
-        self.assert_text(self.get_cart_game_name(), "PS4 игра Sony NieR: Automata - Game of the YoRHa Edition")
-        self.assert_text(self.get_cart_game_price(), "3 199 ₽")
-        self.assert_valuables(self.get_cart_game_price(), self.get_final_price())
-        self.click_get_delete_single()
+        self.assert_values(self.get_cart_price(), self.get_final_price())
+        self.click_delete_single()
         time.sleep(1)
         self.assert_word(self.get_empty_cart(), "Корзина пуста")
         self.get_screenshot()
+
+    def cart_assert(self):
+        self.assert_values(self.get_cart_price(), self.get_final_price())
+        time.sleep(1)
+        self.click_check_in_button()
+        time.sleep(1)
+        self.click_skip_button()
+
+    def cart_delete_all(self):
+        self.click_del_all()
+        self.assert_word(self.get_empty_cart(), "Корзина пуста")
+        self.get_screenshot()
+
+
+
 
 
 
